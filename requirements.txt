@@ -1,0 +1,4 @@
+# The archived experiments used Python 3.11.15.
+numpy==2.4.3
+scipy==1.17.1
+matplotlib==3.10.9

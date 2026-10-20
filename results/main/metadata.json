@@ -1,0 +1,108 @@
+{
+  "manuscript_version": 8,
+  "runtime_seconds": 106.61309683369473,
+  "seeds": [
+    20260721,
+    20260821,
+    20260921,
+    20261021,
+    20261121,
+    20261221,
+    20261321,
+    20261421,
+    20261521,
+    20261621,
+    20261721,
+    20261821,
+    20261921,
+    20262021,
+    20262121,
+    20262221,
+    20262321,
+    20262421,
+    20262521,
+    20262621
+  ],
+  "sample_sizes": {
+    "train": 5000,
+    "test": 20000,
+    "calibration": 2000
+  },
+  "statistics": "Mean and sample standard deviation (ddof=1) over seeds; paired inference uses the seed as the unit.",
+  "main_calibration": "Target P(go or slow | imminent), independent calibration bank.",
+  "twin_calibration": "Original v7 protocol: target clean Bayes utility gap 22 on training bank; independent test evaluation.",
+  "exp1_ranking_bank": "test for both gap and TV; M3 and Exp4 TV rankings use train only",
+  "exp1_worst_target": "Highest ground-truth conditional unsafe-action rate among labeled catastrophic attacks; ties use catalogue order",
+  "exp3_selection_bank": "train",
+  "heldout_attack_diagnostic": {
+    "n_attacks": 100,
+    "direction": "isotropic Gaussian normalized to unit L2",
+    "amplitude": "uniform [0.05,2.5]",
+    "coordinate_budget": 1.5,
+    "minimum_L2_distance_from_training_attack": 0.1,
+    "random_seed_offset": 12345
+  },
+  "grids": {
+    "c": [
+      1,
+      2,
+      4
+    ],
+    "r": [
+      1,
+      2
+    ],
+    "f": [
+      1,
+      2,
+      4
+    ],
+    "d": [
+      1,
+      2
+    ]
+  },
+  "policy_scaling": {
+    "c": [
+      "go/imminent",
+      "brake/ped_far",
+      "emergency/ped_far"
+    ],
+    "r": [
+      "slow/imminent"
+    ],
+    "f": [
+      "brake/clear",
+      "emergency/clear"
+    ],
+    "d": [
+      "go/ped_far (zero remains zero)",
+      "slow/ped_far"
+    ]
+  },
+  "policy_count": 36,
+  "positive_weight_tolerance": 1e-08,
+  "python": "3.11.15",
+  "numpy": "2.4.3",
+  "scipy": "1.17.1",
+  "thread_limits": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "calibration_summary": {
+    "n": 100,
+    "at_budget": 6,
+    "max_absolute_target_error": 0.01644295302013432,
+    "below_target_by_more_than_002": 0
+  },
+  "twin_calibration_summary": {
+    "n": 120,
+    "at_budget": 40,
+    "max_absolute_target_error": 11.631622739676184,
+    "target_error_above_025": 40,
+    "explanation": "Single-sensor directions hit the 1.5 coordinate budget below target; dual/triple directions are approximately gap-balanced on training data."
+  }
+}

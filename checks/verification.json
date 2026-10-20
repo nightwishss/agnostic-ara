@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "mode": "core-and-archives",
+  "check_count": 10,
+  "checks": [
+    "All 36 policies: optimized and direct gaps agree for true and both perceived utilities.",
+    "Known game without a pure saddle: primal, dual and gap search recover the mixed value.",
+    "Strategic regression: recomputed post-update replies and all tied best replies are retained.",
+    "Sample-bank generation is reproducible and separate seed streams yield distinct observations.",
+    "Held-out sampler: 100 reproducible attacks, coordinate budget and 0.10 minimum training distance.",
+    "All 20 paired seed IDs and archived training, calibration, descriptive-ranking and test contracts agree.",
+    "Every main seed: valid LP bounds, stopping residuals, support counts, calibration budgets and safety probabilities.",
+    "All 217 archived main summary entries recompute from the 20 raw runs; means and sample SDs agree.",
+    "Every strategic seed: normalized priors/defenses, family weights, fresh final-reply coverage and LP consistency.",
+    "Strategic means, sample SDs, initial-choice counts and iteration summaries recompute from all raw runs."
+  ],
+  "scope": "Core regression tests and archived-result consistency; no full experiment rerun.",
+  "runtime_seconds": 0.042509457969572395
+}

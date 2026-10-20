@@ -1,0 +1,27 @@
+{(a) Test performance}\par\smallskip
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Method & Worst gap & Mean gap & CatUnsafe & Clean cost \\
+\midrule
+M1 & $24.646 \pm 2.993$ & $3.552 \pm 0.338$ & $0.647 \pm 0.021$ & $0.000 \pm 0.000$ \\
+M2 & $21.032 \pm 3.614$ & $3.109 \pm 0.299$ & $0.501 \pm 0.023$ & $0.415 \pm 0.007$ \\
+M3 & $22.169 \pm 3.231$ & $3.409 \pm 0.496$ & $0.555 \pm 0.145$ & $0.442 \pm 0.126$ \\
+M4 & $20.868 \pm 3.690$ & $3.176 \pm 0.300$ & $0.448 \pm 0.029$ & $0.529 \pm 0.028$ \\
+\bottomrule
+\end{tabular}
+
+\medskip{(b) Paired differences on the same seeds}\par\smallskip
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Contrast & Metric & Mean difference & 95\% paired CI \\
+\midrule
+M4 $-$ M1 & $R_{\max}$ & $-3.778$ & $[-4.119,\ -3.437]$ \\
+M4 $-$ M1 & Mean gap & $-0.376$ & $[-0.412,\ -0.340]$ \\
+M4 $-$ M1 & CatUnsafe & $-0.199$ & $[-0.206,\ -0.192]$ \\
+M4 $-$ M1 & $C_{\rm clean}$ & $0.529$ & $[0.516,\ 0.543]$ \\
+M4 $-$ M2 & $R_{\max}$ & $-0.164$ & $[-0.211,\ -0.117]$ \\
+M4 $-$ M2 & Mean gap & $0.067$ & $[0.058,\ 0.075]$ \\
+M4 $-$ M2 & CatUnsafe & $-0.053$ & $[-0.059,\ -0.047]$ \\
+M4 $-$ M2 & $C_{\rm clean}$ & $0.115$ & $[0.101,\ 0.128]$ \\
+\bottomrule
+\end{tabular}
