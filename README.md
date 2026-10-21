@@ -14,7 +14,7 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-Rebuild the paper's tables and figures from the included 20-seed results, compare their numerical contents with the paper exhibits, and run the numerical checks:
+Generate tables and figures from the included 20-seed results and run the numerical consistency checks:
 
 ```bash
 python reproduce.py
@@ -34,7 +34,7 @@ For core numerical checks without reading the archived experiment results:
 python verify_results.py --unit-only
 ```
 
-Generated tables, figures, summaries, and verification records are written to `generated/`. No LaTeX installation is needed to reproduce the numerical exhibits.
+Generated tables, figures, summaries, and verification records are written to the local `generated/` directory, which is ignored by Git. The repository does not include manuscript sources, a manuscript PDF, or pre-rendered paper exhibits. No LaTeX installation is needed to reproduce the numerical outputs.
 
 The included checks in `checks/` record the archived-result verification and a fresh rerun of the first seed in both simulation suites: all 969 compared numerical values matched the archived records exactly. This first-seed rerun is separate from the consistency checks over all 20 archived seeds.
 
@@ -89,7 +89,6 @@ verify_results.py             Numerical, protocol, and archived-result checks
 requirements.txt              Pinned dependencies
 results/main/                 Original 20-seed main results and metadata
 results/strategic/             Original 20-seed strategic results
-paper_exhibits/                Current paper tables and figures used as references
 code_provenance.json           Computational-function and result-file integrity record
 generated/                    Rebuilt outputs; ignored by Git
 ```

@@ -30,7 +30,6 @@ def main():
         run('simulation.py', '--seeds', '20')
         run('strategic.py', '--seeds', '20')
     run('make_exhibits.py')
-    run('make_exhibits.py', '--check')
     run('verify_results.py')
     print('Complete: tables and figures are in generated/.', flush=True)
 

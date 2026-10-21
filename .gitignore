@@ -4,3 +4,4 @@ __pycache__/
 .runtime_cache/
 .DS_Store
 generated/
+paper_exhibits/

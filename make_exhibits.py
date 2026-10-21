@@ -5,8 +5,8 @@ This script does not fit a defense, select attacks, or run a simulator. The save
 result keys retain their original identifiers: M5 is the paper's proposed M4;
 the saved M4 is the separate full-catalogue reference. Only display labels change.
 
-Run ``python make_exhibits.py --check`` to also compare every displayed numeric
-table cell with the corresponding frozen table in paper_exhibits/tables/.
+Generated tables and figures are written to the local, Git-ignored generated/
+directory. Numerical consistency is checked separately by verify_results.py.
 """
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
-import re
 
 import matplotlib
 
@@ -233,51 +232,8 @@ def make_figures(main, destination):
     plt.close(fig)
 
 
-def strip_revision_commands(text):
-    r"""Remove balanced \rev{...} wrappers while preserving their contents."""
-    while r"\rev{" in text:
-        start = text.index(r"\rev{")
-        cursor, depth = start + len(r"\rev{"), 1
-        end = cursor
-        while depth and end < len(text):
-            if text[end] in "{}" and (end == 0 or text[end - 1] != "\\"):
-                depth += 1 if text[end] == "{" else -1
-            end += 1
-        if depth:
-            raise ValueError("Unbalanced revision command in reference table")
-        text = text[:start] + text[cursor:end - 1] + text[end:]
-    return text
-
-
-def numeric_body_rows(text):
-    """Extract formatted row numbers, excluding table headings and LaTeX layout."""
-    text = strip_revision_commands(text)
-    rows = []
-    for body in re.findall(r"\\midrule(.*?)\\bottomrule", text, flags=re.S):
-        for row in body.split(r"\\"):
-            if "&" not in row:
-                continue
-            numbers = re.findall(r"(?<![A-Za-z])[-+]?\d+(?:\.\d+)?", row)
-            rows.append(numbers)
-    return rows
-
-
-def check_tables(tables, reference):
-    checked = []
-    for name, content in tables.items():
-        path = reference / f"{name}.tex"
-        if not path.is_file():
-            raise FileNotFoundError(f"Missing frozen paper table: {path}")
-        actual, expected = numeric_body_rows(content), numeric_body_rows(path.read_text())
-        if actual != expected:
-            raise AssertionError(f"Displayed numeric rows differ for {name}:\n{actual}\n{expected}")
-        checked.append(name)
-    return checked
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true", help="also verify every numeric table row against the frozen paper tables")
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root; defaults to this script's directory")
     args = parser.parse_args()
     root = args.root.resolve()
@@ -297,18 +253,15 @@ def main():
     for name, content in tables.items():
         (table_dir / f"{name}.tex").write_text(content)
     make_figures(main_results, figure_dir)
-    checked = check_tables(tables, root / "paper_exhibits/tables") if args.check else []
     manifest = {"sources": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                             for p in [main_path, strategic_path]},
                 "seed_count": len(main_results), "sd_ddof": 1,
                 "paired_interval": "two-sided paired t, 95%, df=19; unadjusted",
-                "table_numeric_checks": checked, "tables": sorted(tables),
+                "tables": sorted(tables),
                 "figures": ["attack_ranking.png", "support_certificate.png"],
                 "scientific_models_recomputed": False}
     (root / "generated/exhibit_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Generated {len(tables)} tables and 2 figures from unchanged saved results.")
-    if checked:
-        print(f"PASS: all displayed numeric rows match {len(checked)} frozen paper tables.")
 
 
 if __name__ == "__main__":
