@@ -10,7 +10,7 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--rerun', action='store_true',
-                        help='rerun both original 20-seed simulation suites before building exhibits')
+                        help='rerun all three 20-run simulation suites before building exhibits')
     args = parser.parse_args()
     root = Path(__file__).resolve().parent
     env = os.environ.copy()
@@ -29,8 +29,10 @@ def main():
     if args.rerun:
         run('simulation.py', '--seeds', '20')
         run('strategic.py', '--seeds', '20')
+        run('policy_library.py', '--runs', '20')
     run('make_exhibits.py')
     run('verify_results.py')
+    run('verify_policy_library.py')
     print('Complete: tables and figures are in generated/.', flush=True)
 
 

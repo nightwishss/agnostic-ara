@@ -1,0 +1,1800 @@
+{
+  "experiment": "Experiment 2: policy-library comparison",
+  "configurations": {
+    "original36": [
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "balanced144": [
+      [
+        1,
+        2,
+        4,
+        8
+      ],
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        1,
+        2,
+        4,
+        8
+      ],
+      [
+        1,
+        2,
+        4
+      ]
+    ],
+    "cautious120": [
+      [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      [
+        1,
+        2,
+        4,
+        8
+      ],
+      [
+        1,
+        2,
+        4
+      ],
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  "factor_order": [
+    "collision",
+    "residual",
+    "false_alarm",
+    "far"
+  ],
+  "construction": "Complete factorial grids; each contains the original36 library. The 120- and 144-policy grids are not nested in one another.",
+  "run_ids": [
+    27182800,
+    27182900,
+    27183000,
+    27183100,
+    27183200,
+    27183300,
+    27183400,
+    27183500,
+    27183600,
+    27183700,
+    27183800,
+    27183900,
+    27184000,
+    27184100,
+    27184200,
+    27184300,
+    27184400,
+    27184500,
+    27184600,
+    27184700
+  ],
+  "run_step": 100,
+  "sample_sizes": {
+    "calibration": 2000,
+    "train": 5000,
+    "test": 20000
+  },
+  "random_generator": "numpy.random.RandomState",
+  "random_stream_offsets": {
+    "train": 0,
+    "calibration": 1,
+    "test": 2,
+    "attacks": 3
+  },
+  "shared_within_run": [
+    "calibration samples",
+    "training samples",
+    "test samples",
+    "attack catalog",
+    "evaluation utility"
+  ],
+  "environment": {
+    "state_prior": [
+      0.6,
+      0.25,
+      0.15
+    ],
+    "sensor_means": [
+      [
+        0.1,
+        0.1,
+        0.1,
+        0.2
+      ],
+      [
+        0.7,
+        0.5,
+        0.3,
+        0.7
+      ],
+      [
+        0.9,
+        0.9,
+        0.8,
+        0.8
+      ]
+    ],
+    "sensor_standard_deviation": 0.35,
+    "state_order": [
+      "clear",
+      "ped_far",
+      "imminent"
+    ],
+    "action_order": [
+      "go",
+      "slow",
+      "brake",
+      "emergency"
+    ],
+    "sensor_order": [
+      "Camera",
+      "LiDAR",
+      "Radar",
+      "GPS/Map"
+    ]
+  },
+  "true_utility": [
+    [
+      10.0,
+      0.0,
+      -200.0
+    ],
+    [
+      0.0,
+      8.0,
+      -100.0
+    ],
+    [
+      -20.0,
+      5.0,
+      15.0
+    ],
+    [
+      -30.0,
+      -10.0,
+      20.0
+    ]
+  ],
+  "policy_factor_entries": {
+    "collision": [
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "residual": [
+      [
+        1,
+        2
+      ]
+    ],
+    "false_alarm": [
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "far": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "policy_note": "Factors change candidate policy utilities only; all fitting and evaluation gaps use true_utility. Entry indices are zero-based [action,state].",
+  "policies": [
+    {
+      "id": 0,
+      "name": "bayes",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 1,
+      "name": "σ(c=1.0,r=1.0,f=1.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 2,
+      "name": "σ(c=1.0,r=1.0,f=2.0,d=1.0)",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 3,
+      "name": "σ(c=1.0,r=1.0,f=2.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 4,
+      "name": "σ(c=1.0,r=1.0,f=4.0,d=1.0)",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 5,
+      "name": "σ(c=1.0,r=1.0,f=4.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 6,
+      "name": "σ(c=1.0,r=2.0,f=1.0,d=1.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 7,
+      "name": "σ(c=1.0,r=2.0,f=1.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 8,
+      "name": "σ(c=1.0,r=2.0,f=2.0,d=1.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 9,
+      "name": "σ(c=1.0,r=2.0,f=2.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 10,
+      "name": "σ(c=1.0,r=2.0,f=4.0,d=1.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 11,
+      "name": "σ(c=1.0,r=2.0,f=4.0,d=2.0)",
+      "collision": 1.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 12,
+      "name": "σ(c=2.0,r=1.0,f=1.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 13,
+      "name": "σ(c=2.0,r=1.0,f=1.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 14,
+      "name": "σ(c=2.0,r=1.0,f=2.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 15,
+      "name": "σ(c=2.0,r=1.0,f=2.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 16,
+      "name": "σ(c=2.0,r=1.0,f=4.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 17,
+      "name": "σ(c=2.0,r=1.0,f=4.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 18,
+      "name": "σ(c=2.0,r=2.0,f=1.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 19,
+      "name": "σ(c=2.0,r=2.0,f=1.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 20,
+      "name": "σ(c=2.0,r=2.0,f=2.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 21,
+      "name": "σ(c=2.0,r=2.0,f=2.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 22,
+      "name": "σ(c=2.0,r=2.0,f=4.0,d=1.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 23,
+      "name": "σ(c=2.0,r=2.0,f=4.0,d=2.0)",
+      "collision": 2.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 24,
+      "name": "σ(c=4.0,r=1.0,f=1.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 25,
+      "name": "σ(c=4.0,r=1.0,f=1.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 26,
+      "name": "σ(c=4.0,r=1.0,f=2.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 27,
+      "name": "σ(c=4.0,r=1.0,f=2.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 28,
+      "name": "σ(c=4.0,r=1.0,f=4.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 29,
+      "name": "σ(c=4.0,r=1.0,f=4.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 1.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 30,
+      "name": "σ(c=4.0,r=2.0,f=1.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 1.0
+    },
+    {
+      "id": 31,
+      "name": "σ(c=4.0,r=2.0,f=1.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 1.0,
+      "far": 2.0
+    },
+    {
+      "id": 32,
+      "name": "σ(c=4.0,r=2.0,f=2.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 1.0
+    },
+    {
+      "id": 33,
+      "name": "σ(c=4.0,r=2.0,f=2.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 2.0,
+      "far": 2.0
+    },
+    {
+      "id": 34,
+      "name": "σ(c=4.0,r=2.0,f=4.0,d=1.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 1.0
+    },
+    {
+      "id": 35,
+      "name": "σ(c=4.0,r=2.0,f=4.0,d=2.0)",
+      "collision": 4.0,
+      "residual": 2.0,
+      "false_alarm": 4.0,
+      "far": 2.0
+    },
+    {
+      "id": 36,
+      "name": "c1_r4_f1_d1",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 37,
+      "name": "c1_r4_f1_d2",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 38,
+      "name": "c1_r4_f2_d1",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 39,
+      "name": "c1_r4_f2_d2",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 40,
+      "name": "c1_r4_f4_d1",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 41,
+      "name": "c1_r4_f4_d2",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 42,
+      "name": "c1_r8_f1_d1",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 43,
+      "name": "c1_r8_f1_d2",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 44,
+      "name": "c1_r8_f2_d1",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 45,
+      "name": "c1_r8_f2_d2",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 46,
+      "name": "c1_r8_f4_d1",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 47,
+      "name": "c1_r8_f4_d2",
+      "collision": 1,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 48,
+      "name": "c2_r4_f1_d1",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 49,
+      "name": "c2_r4_f1_d2",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 50,
+      "name": "c2_r4_f2_d1",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 51,
+      "name": "c2_r4_f2_d2",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 52,
+      "name": "c2_r4_f4_d1",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 53,
+      "name": "c2_r4_f4_d2",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 54,
+      "name": "c2_r8_f1_d1",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 55,
+      "name": "c2_r8_f1_d2",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 56,
+      "name": "c2_r8_f2_d1",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 57,
+      "name": "c2_r8_f2_d2",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 58,
+      "name": "c2_r8_f4_d1",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 59,
+      "name": "c2_r8_f4_d2",
+      "collision": 2,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 60,
+      "name": "c4_r4_f1_d1",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 61,
+      "name": "c4_r4_f1_d2",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 62,
+      "name": "c4_r4_f2_d1",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 63,
+      "name": "c4_r4_f2_d2",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 64,
+      "name": "c4_r4_f4_d1",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 65,
+      "name": "c4_r4_f4_d2",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 66,
+      "name": "c4_r8_f1_d1",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 67,
+      "name": "c4_r8_f1_d2",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 68,
+      "name": "c4_r8_f2_d1",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 69,
+      "name": "c4_r8_f2_d2",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 70,
+      "name": "c4_r8_f4_d1",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 71,
+      "name": "c4_r8_f4_d2",
+      "collision": 4,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 72,
+      "name": "c8_r1_f1_d1",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 73,
+      "name": "c8_r1_f1_d2",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 74,
+      "name": "c8_r1_f2_d1",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 75,
+      "name": "c8_r1_f2_d2",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 76,
+      "name": "c8_r1_f4_d1",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 77,
+      "name": "c8_r1_f4_d2",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 78,
+      "name": "c8_r2_f1_d1",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 79,
+      "name": "c8_r2_f1_d2",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 80,
+      "name": "c8_r2_f2_d1",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 81,
+      "name": "c8_r2_f2_d2",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 82,
+      "name": "c8_r2_f4_d1",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 83,
+      "name": "c8_r2_f4_d2",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 84,
+      "name": "c8_r4_f1_d1",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 85,
+      "name": "c8_r4_f1_d2",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 86,
+      "name": "c8_r4_f2_d1",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 87,
+      "name": "c8_r4_f2_d2",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 88,
+      "name": "c8_r4_f4_d1",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 89,
+      "name": "c8_r4_f4_d2",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 90,
+      "name": "c8_r8_f1_d1",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 91,
+      "name": "c8_r8_f1_d2",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 92,
+      "name": "c8_r8_f2_d1",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 93,
+      "name": "c8_r8_f2_d2",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 94,
+      "name": "c8_r8_f4_d1",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 95,
+      "name": "c8_r8_f4_d2",
+      "collision": 8,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 96,
+      "name": "c16_r1_f1_d1",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 97,
+      "name": "c16_r1_f1_d2",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 98,
+      "name": "c16_r1_f2_d1",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 99,
+      "name": "c16_r1_f2_d2",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 100,
+      "name": "c16_r1_f4_d1",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 101,
+      "name": "c16_r1_f4_d2",
+      "collision": 16,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 102,
+      "name": "c16_r2_f1_d1",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 103,
+      "name": "c16_r2_f1_d2",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 104,
+      "name": "c16_r2_f2_d1",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 105,
+      "name": "c16_r2_f2_d2",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 106,
+      "name": "c16_r2_f4_d1",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 107,
+      "name": "c16_r2_f4_d2",
+      "collision": 16,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 108,
+      "name": "c16_r4_f1_d1",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 109,
+      "name": "c16_r4_f1_d2",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 110,
+      "name": "c16_r4_f2_d1",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 111,
+      "name": "c16_r4_f2_d2",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 112,
+      "name": "c16_r4_f4_d1",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 113,
+      "name": "c16_r4_f4_d2",
+      "collision": 16,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 114,
+      "name": "c16_r8_f1_d1",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 1
+    },
+    {
+      "id": 115,
+      "name": "c16_r8_f1_d2",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 1,
+      "far": 2
+    },
+    {
+      "id": 116,
+      "name": "c16_r8_f2_d1",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 1
+    },
+    {
+      "id": 117,
+      "name": "c16_r8_f2_d2",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 2,
+      "far": 2
+    },
+    {
+      "id": 118,
+      "name": "c16_r8_f4_d1",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 1
+    },
+    {
+      "id": 119,
+      "name": "c16_r8_f4_d2",
+      "collision": 16,
+      "residual": 8,
+      "false_alarm": 4,
+      "far": 2
+    },
+    {
+      "id": 120,
+      "name": "c1_r1_f1_d4",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 121,
+      "name": "c1_r1_f2_d4",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 122,
+      "name": "c1_r1_f4_d4",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 123,
+      "name": "c1_r1_f8_d1",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 124,
+      "name": "c1_r1_f8_d2",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 125,
+      "name": "c1_r1_f8_d4",
+      "collision": 1,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 126,
+      "name": "c1_r2_f1_d4",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 127,
+      "name": "c1_r2_f2_d4",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 128,
+      "name": "c1_r2_f4_d4",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 129,
+      "name": "c1_r2_f8_d1",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 130,
+      "name": "c1_r2_f8_d2",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 131,
+      "name": "c1_r2_f8_d4",
+      "collision": 1,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 132,
+      "name": "c1_r4_f1_d4",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 133,
+      "name": "c1_r4_f2_d4",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 134,
+      "name": "c1_r4_f4_d4",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 135,
+      "name": "c1_r4_f8_d1",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 136,
+      "name": "c1_r4_f8_d2",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 137,
+      "name": "c1_r4_f8_d4",
+      "collision": 1,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 138,
+      "name": "c2_r1_f1_d4",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 139,
+      "name": "c2_r1_f2_d4",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 140,
+      "name": "c2_r1_f4_d4",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 141,
+      "name": "c2_r1_f8_d1",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 142,
+      "name": "c2_r1_f8_d2",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 143,
+      "name": "c2_r1_f8_d4",
+      "collision": 2,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 144,
+      "name": "c2_r2_f1_d4",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 145,
+      "name": "c2_r2_f2_d4",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 146,
+      "name": "c2_r2_f4_d4",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 147,
+      "name": "c2_r2_f8_d1",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 148,
+      "name": "c2_r2_f8_d2",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 149,
+      "name": "c2_r2_f8_d4",
+      "collision": 2,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 150,
+      "name": "c2_r4_f1_d4",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 151,
+      "name": "c2_r4_f2_d4",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 152,
+      "name": "c2_r4_f4_d4",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 153,
+      "name": "c2_r4_f8_d1",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 154,
+      "name": "c2_r4_f8_d2",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 155,
+      "name": "c2_r4_f8_d4",
+      "collision": 2,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 156,
+      "name": "c4_r1_f1_d4",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 157,
+      "name": "c4_r1_f2_d4",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 158,
+      "name": "c4_r1_f4_d4",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 159,
+      "name": "c4_r1_f8_d1",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 160,
+      "name": "c4_r1_f8_d2",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 161,
+      "name": "c4_r1_f8_d4",
+      "collision": 4,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 162,
+      "name": "c4_r2_f1_d4",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 163,
+      "name": "c4_r2_f2_d4",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 164,
+      "name": "c4_r2_f4_d4",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 165,
+      "name": "c4_r2_f8_d1",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 166,
+      "name": "c4_r2_f8_d2",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 167,
+      "name": "c4_r2_f8_d4",
+      "collision": 4,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 168,
+      "name": "c4_r4_f1_d4",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 169,
+      "name": "c4_r4_f2_d4",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 170,
+      "name": "c4_r4_f4_d4",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 171,
+      "name": "c4_r4_f8_d1",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 172,
+      "name": "c4_r4_f8_d2",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 173,
+      "name": "c4_r4_f8_d4",
+      "collision": 4,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 174,
+      "name": "c8_r1_f1_d4",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 175,
+      "name": "c8_r1_f2_d4",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 176,
+      "name": "c8_r1_f4_d4",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 177,
+      "name": "c8_r1_f8_d1",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 178,
+      "name": "c8_r1_f8_d2",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 179,
+      "name": "c8_r1_f8_d4",
+      "collision": 8,
+      "residual": 1,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 180,
+      "name": "c8_r2_f1_d4",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 181,
+      "name": "c8_r2_f2_d4",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 182,
+      "name": "c8_r2_f4_d4",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 183,
+      "name": "c8_r2_f8_d1",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 184,
+      "name": "c8_r2_f8_d2",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 185,
+      "name": "c8_r2_f8_d4",
+      "collision": 8,
+      "residual": 2,
+      "false_alarm": 8,
+      "far": 4
+    },
+    {
+      "id": 186,
+      "name": "c8_r4_f1_d4",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 1,
+      "far": 4
+    },
+    {
+      "id": 187,
+      "name": "c8_r4_f2_d4",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 2,
+      "far": 4
+    },
+    {
+      "id": 188,
+      "name": "c8_r4_f4_d4",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 4,
+      "far": 4
+    },
+    {
+      "id": 189,
+      "name": "c8_r4_f8_d1",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 1
+    },
+    {
+      "id": 190,
+      "name": "c8_r4_f8_d2",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 2
+    },
+    {
+      "id": 191,
+      "name": "c8_r4_f8_d4",
+      "collision": 8,
+      "residual": 4,
+      "false_alarm": 8,
+      "far": 4
+    }
+  ],
+  "rho_indexing": "All rho vectors index the common policies list; entries outside the selected library are zero.",
+  "attack_catalog": {
+    "size": 100,
+    "severe_attack_count": 5,
+    "per_sensor_limit": 1.5,
+    "generator": "simulation.build_catalogue_100",
+    "calibration": "The original severe-attack calibration under the clean Bayes policy, using only the calibration sample bank."
+  },
+  "methods": {
+    "M1": "Clean Bayes policy: smallest clean training gap",
+    "M2": "One policy minimizing the uniform average training gap",
+    "M3": "Mixed minimax over the five highest training posterior-TV attacks",
+    "M4": "Algorithm 1: iteratively add a full-catalog worst-gap attack and solve the catalog game"
+  },
+  "M4_settings": {
+    "initial_policy": "original clean Bayes",
+    "max_iterations": 50,
+    "residual_tolerance": 0.1,
+    "stop": "Worst catalog attack is already collected and residual is within tolerance"
+  },
+  "metric_definitions": {
+    "original_worst_gap": "Largest utility gap over all 100 attacks",
+    "original_mean_gap": "Uniform average utility gap over all 100 attacks",
+    "original_clean_cost": "Utility gap with no sensor manipulation",
+    "CatUnsafe": "Mean rate of go or slow given true crossing, equally averaged over the five designated severe attacks",
+    "worst_severe_unsafe": "Maximum such conditional unsafe rate over the five designated severe attacks",
+    "mean_clear_false_emergency": "Mean emergency-braking rate given a clear road, equally averaged over all 100 attacks"
+  },
+  "uncertainty": "Summary uses arithmetic means and sample SD across runs; SD is null for one run. Probability metrics are fractions, not percentages.",
+  "design": "Grids are fixed before these additional runs; test samples do not select rules, attacks, or weights."
+}

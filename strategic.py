@@ -75,7 +75,7 @@ def build(seed):
     ze, pe, te = sim.generate_sample_bank(20000, np.random.RandomState(seed+2))
     policies = sim.build_policy_library()
     ar = np.random.RandomState(seed+3)
-    # Original v7 5B begins this attack RNG directly at the twin catalogue.
+    # Use a separate background-attack stream for the strategic comparison.
     attacks = sim.build_twin_catalogue(ar, policies, zc, tc, zt, pt)
     pairs = [(a['name'], a['delta']) for a in attacks]
     gtrain = sim.compute_gap_matrix(policies, pairs, zt, pt)
@@ -176,7 +176,7 @@ def main():
     for i in range(args.seeds):
         seed=20260721+100*i; t0=time.perf_counter(); row=evaluate(seed); all_seeds.append(row)
         joint=row['generators']['joint']
-        print(f"Strategic seed={seed} t={time.perf_counter()-t0:.1f}s joint E={joint['sz']} Rstrat_test={joint['Rstrat']:.3f} Rfull_test={joint['Rfull']:.3f} stable={joint['stable']}",flush=True)
+        print(f"Strategic seed={seed} t={time.perf_counter()-t0:.1f}s both-models E={joint['sz']} Rstrat_test={joint['Rstrat']:.3f} Rfull_test={joint['Rfull']:.3f} stable={joint['stable']}",flush=True)
     n=len(all_seeds)
     div={}
     predicates={'L0_H':lambda r:r['initial_choice_families']['L0']=='H',
@@ -190,8 +190,8 @@ def main():
     result=dict(divergence_20seed=div,comparison_20seed=aggregate(all_seeds),
         joint_iters_20seed=stats([r['generators']['joint']['iters'] for r in all_seeds]),all_seeds=all_seeds,
         metadata=dict(runtime_seconds=time.perf_counter()-started,sample_sizes={'train':5000,'test':20000,'calibration':2000},
-            seed_count=n,statistic='Mean and sample SD (ddof=1)',catalogue='Original v7 5B twin catalogue; same six severe attacks as 5A, independent ordinary-attack RNG stream',
-            calibration_bank='Original v7 twin calibration on training bank; independent evaluation bank',response_generation_bank='train',stopping='fresh final training BR set is a subset of discovered E',
+            seed_count=n,statistic='Mean and sample SD (ddof=1)',catalogue='Hide/fake catalog; same six severe attacks as the non-recursive comparison, independent background-attack RNG stream',
+            calibration_bank='Hide/fake calibration on training bank; independent evaluation bank',response_generation_bank='train',stopping='fresh final training BR set is a subset of discovered E',
             Rstrat='Held-out test gap, maximized over final frozen training-BR set A(rho)',
             V_E_train='Restricted-game training LP value, distinct from Rstrat and R_E_test',
             R_strategic_test_reestimated_BR='Retrospective diagnostic only; does not modify training solution',positive_weight_tolerance=POS_TOL,best_response_tie_tolerance=BR_TOL))

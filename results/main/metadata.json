@@ -1,6 +1,6 @@
 {
-  "manuscript_version": 8,
-  "runtime_seconds": 106.61309683369473,
+  "experiment_suite": "main",
+  "runtime_seconds": 188.12541854195297,
   "seeds": [
     20260721,
     20260821,
@@ -30,9 +30,9 @@
   },
   "statistics": "Mean and sample standard deviation (ddof=1) over seeds; paired inference uses the seed as the unit.",
   "main_calibration": "Target P(go or slow | imminent), independent calibration bank.",
-  "twin_calibration": "Original v7 protocol: target clean Bayes utility gap 22 on training bank; independent test evaluation.",
+  "twin_calibration": "Target clean Bayes utility gap 22 on training bank; independent test evaluation.",
   "exp1_ranking_bank": "test for both gap and TV; M3 and Exp4 TV rankings use train only",
-  "exp1_worst_target": "Highest ground-truth conditional unsafe-action rate among labeled catastrophic attacks; ties use catalogue order",
+  "exp1_worst_target": "Highest ground-truth conditional unsafe-action rate among labeled catastrophic attacks; ties use catalog order",
   "exp3_selection_bank": "train",
   "heldout_attack_diagnostic": {
     "n_attacks": 100,

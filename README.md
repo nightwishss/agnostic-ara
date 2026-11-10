@@ -1,102 +1,75 @@
 # Agnostic ARA
 
-Reproducible code and archived results for **Agnostic adversarial risk analysis for Bayesian decision systems under unknown sensor attacks**.
+Reproduction code for *Agnostic adversarial risk analysis for Bayesian decision systems under unknown sensor attacks*.
 
-The experiments compare sensor attacks through decision-level utility loss, construct a minimax defense without specifying attack frequencies, recover least-favorable attack weights, and incorporate attacks chosen using an opponent's own utility.
+The experiments compare attacks by their consequences for decisions, compute a minimax defense and least-favorable attack weights without an externally specified attack prior, and incorporate responses generated from an attacker's own utility.
 
-## Reproduce the paper
+## Run
 
-The archived simulation environment used Python 3.11.15. Install the pinned dependencies in a virtual environment:
+Use Python 3.11 and install the pinned dependencies:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-```
-
-Generate tables and figures from the included 20-seed results and run the numerical consistency checks:
-
-```bash
 python reproduce.py
 ```
 
-To rerun both simulation suites from scratch before rebuilding the exhibits:
+This builds tables and figures from the saved simulation results and checks their numerical consistency. To regenerate all results before building the outputs:
 
 ```bash
 python reproduce.py --rerun
 ```
 
-The second command replaces the archived result files with freshly calculated results. It uses the same model, seeds, calibration, training, and test protocol. Linear programs are solved with SciPy's HiGHS interface; small floating-point differences between environments are possible.
+The full rerun replaces the saved results using the same random streams and experiment settings. SciPy's HiGHS interface solves the linear programs; small floating-point differences between environments are possible. Outputs and verification reports go to `generated/`, which is ignored by Git. A LaTeX installation is not required. The repository contains code, configurations, and numerical results; manuscript files and pre-rendered exhibits are not included.
 
-For core numerical checks without reading the archived experiment results:
+## Experiments
 
-```bash
-python verify_results.py --unit-only
-```
+| Experiment | What is compared | Code and saved results |
+| --- | --- | --- |
+| 1. Identifying consequential attacks | Utility gap versus posterior total variation (TV) for ordering the same attacks | `simulation.py`; `results/main/`, key `exp1` |
+| 2. Computing a defense | M1–M4 on the same catalog, with a catalog-composition sensitivity check | `simulation.py`; keys `exp2`, `exp3` |
+| 2. Larger policy libraries | Matched comparisons using 36, 120, and 144 policies | `policy_library.py`; `results/policy_library/` |
+| 3. Defense from a small attack set | Algorithm 1 versus TV and random attack selection; a hide/fake extension includes all four methods | `simulation.py`; keys `exp4`, `exp7`, `certificates` |
+| 4. Attacker objectives | Responses from a collision-oriented model, a disruption-oriented model, or both; Level-0 provides a reference | `strategic.py`; `results/strategic/` |
+| Attack-coverage diagnostic | Frozen defenses tested on independently generated attacks | `simulation.py`; key `heldout_attacks` |
 
-Generated tables, figures, summaries, and verification records are written to the local `generated/` directory, which is ignored by Git. The repository does not include manuscript sources, a manuscript PDF, or pre-rendered paper exhibits. No LaTeX installation is needed to reproduce the numerical outputs.
+The main-result files retain their established storage keys. The following mapping is applied when generating the paper's tables and figures:
 
-The included checks in `checks/` record the archived-result verification and a fresh rerun of the first seed in both simulation suites: all 969 compared numerical values matched the archived records exactly. This first-seed rerun is separate from the consistency checks over all 20 archived seeds.
-
-## Experiments and files
-
-| Paper experiment | Question | Implementation | Archived results |
-| --- | --- | --- | --- |
-| 1. Decision-critical attack ranking | Does utility gap identify consequential attacks more reliably than posterior total variation? | `simulation.py` | `results/main/all_seeds.json`: `exp1` |
-| 2. Protection without attack-frequency information | How do clean, uniform-weight, TV-guided, and agnostic defenses compare? How does catalogue composition affect protection? | `simulation.py` | `exp2`, `exp3` |
-| 3. A few attacks and the full catalogue | Can selected attacks recover the finite full-catalogue game? What happens when hide and fake threats conflict? | `simulation.py` | `exp4`, `exp7`, `certificates` |
-| 4. Attacker objectives and joint defense | How do different attacker utilities change best responses and the joint least-favorable defense? | `strategic.py` | `results/strategic/all_seeds.json` |
-| Appendix: attack-catalogue coverage | How do frozen defenses perform on separately generated attacks? | `simulation.py` | `heldout_attacks` |
-
-The stored JSON keys retain the original experiment-batch schema so that their numerical records remain unchanged. Paper numbering follows the table above.
-
-### Method labels
-
-The paper uses four methods. The archived simulation schema also stores a full-catalogue reference:
-
-| Paper label | Stored main-result key | Meaning |
+| Paper method | Main-result key | Definition |
 | --- | --- | --- |
 | M1 | M1 | Clean Bayes policy |
-| M2 | M2 | Uniform-weight gap defense |
-| M3 | M3 | Minimax defense over five attacks selected by posterior TV |
-| M4 | M5 | Proposed iterative utility-gap attack search |
-| Full-catalogue reference, unnumbered | M4 | Minimax solution using every catalogue attack |
+| M2 | M2 | Defense minimizing average gap under equal attack weights |
+| M3 | M3 | Minimax defense over the five attacks with the largest posterior TV |
+| M4 | M5 | Algorithm 1: iteratively add attacks with the largest defender gap |
+| Full-catalog reference | M4 | Minimax solution using all catalog attacks |
 
-Generated paper tables use the paper's M1-M4 labels. The reference is not an additional competing method.
+The policy-library results use M1–M4 directly. In the strategic results, `tau_H` and `tau_F` denote the two attacker models; the stored key `joint` means using the union of their responses, not a three-player game. Least-favorable weights are computed over the collected attacks.
 
-## Experimental protocol
+## Settings and measures
 
-- Three environmental states, four sensor channels, four actions, and a fixed library of 36 defender policies.
-- Twenty seeds: `20260721 + 100*i`, for `i = 0,...,19`.
-- Per seed: 2,000 calibration observations, 5,000 training observations, and 20,000 independent test observations. Random streams use `seed+1`, `seed`, and `seed+2`, respectively.
-- The main attack generator starts at `seed+3`. It constructs 100 attacks, including five attacks calibrated against the clean rule's unsafe-action rate.
-- The conflicting-threat construction contains three hide and three fake attacks, calibrated toward a clean-rule utility gap of 22, subject to the per-sensor limit of 1.5. Some single-sensor attacks reach that limit before reaching the target.
-- The strategic suite uses the same hide/fake construction but begins its attack RNG independently. Its ordinary background attacks therefore differ from those in the main conflicting-threat experiment. Both suites retain their original generation order.
-- Policies, attack selection, and least-favorable weights are fitted on training observations. Evaluation uses independent test observations. Tables report means and sample standard deviations across seeds; selected comparisons use paired t intervals.
+- The simulator has three environmental states, four sensor channels, and four driving actions. Perturbations are added to sensor readings, with an absolute limit of 1.5 per channel.
+- Main and strategic experiments each use 20 runs, identified by `20260721 + 100*i` for `i = 0,...,19`. Each run has 2,000 calibration, 5,000 training, and 20,000 test observations from separate random streams.
+- The first catalog has 100 attacks, including five calibrated against the clean policy's unsafe-action rate. The hide/fake catalog has three severe attacks of each kind, calibrated toward a clean-policy utility gap of 22 within the same perturbation limit. Some single-channel attacks reach the limit before that target. The strategic comparison uses the same construction with a separate background-attack stream.
+- Training data determine the defense, selected attacks, and least-favorable weights. Test observations evaluate the fitted defense. Experiment 1 uses test observations only for its descriptive attack comparison. Reported variability is the sample standard deviation across runs.
+- The policy-library comparison uses 20 additional matched runs, identified by `27182800 + 100*i`. All methods and libraries in each run share samples, attacks, and the true evaluation utility. The 120-policy grid adds more cautious rules; the 144-policy grid expands the four preference dimensions more evenly. Both contain the original 36 policies. Exact grids and random-stream offsets are saved in `results/policy_library/metadata.json`.
 
-The unsafe-action rate is the probability of choosing `go` or `slow` conditional on the true imminent-danger state. It is an action indicator, not a simulated collision rate. The main CatUnsafe measure averages over the designated severe attacks; the appendix averages over a different, separately generated attack set.
+Worst gap is the largest expected utility loss over the evaluated attacks; mean gap averages those losses. CatUnsafe averages the probability of choosing `go` or `slow` in an imminent-crossing state over the designated severe attacks. It measures unsafe actions, not simulated collisions. Clean cost is the utility loss without an attack relative to the clean Bayes policy, not a computational cost. All policies are evaluated using the same true utility matrix, including those constructed with different preference multipliers.
 
-The appendix sampler uses normalized Gaussian directions, an L2 multiplier uniform on `[0.05, 2.5]`, coordinate clipping at 1.5, and a minimum L2 distance of 0.10 from the training catalogue. These attacks are evaluated without refitting the defense.
+Level-0 checks all attacks in the specified finite catalog. Its upper/lower-bound difference measures optimization error for that catalog and policy library. Level-1 instead generates attacks from modeled opponent utilities and checks that their current best responses have been collected. Worst-gap optimization can trade off clean performance and individual safety indicators. The payoff matrices are precomputed; a small selected attack set is not an end-to-end runtime claim.
 
-## Repository layout
+## Code and checks
 
 ```text
-simulation.py                 Main simulation and finite minimax algorithms
-strategic.py                  Attacker utilities and updated best-response loop
-reproduce.py                  Single entry point for reproduction
-make_exhibits.py               Tables and figures calculated from saved results
-verify_results.py             Numerical, protocol, and archived-result checks
-requirements.txt              Pinned dependencies
-results/main/                 Original 20-seed main results and metadata
-results/strategic/             Original 20-seed strategic results
-code_provenance.json           Computational-function and result-file integrity record
-generated/                    Rebuilt outputs; ignored by Git
+simulation.py            Sensor model, policies, minimax solver, main experiments
+strategic.py             Attacker utilities and response-generation loop
+policy_library.py        Matched policy-library comparison
+reproduce.py             Reproduction entry point
+make_exhibits.py          Tables and figures from saved results
+verify_results.py        Core algorithms and main/strategic archive checks
+verify_policy_library.py Policy-library definitions and archive checks
+requirements.txt         Pinned numerical and plotting dependencies
+results/                 Numerical records and experiment settings
 ```
 
-## Interpretation
-
-Level-0 searches the finite catalogue for the largest true defender gap. Level-1 generates candidate attacks from modeled attacker utilities; the defender still evaluates their consequences using its own utility. Response-set stability checks that the modeled current best responses have already been collected. It is distinct from a full-catalogue minimax certificate.
-
-Small attack support preserves the specified finite game's protection; it does not establish protection against every unsearched perturbation. Worst utility gap also need not move in the same direction as every event-specific safety rate. The simulations use a one-shot synthetic crossing model and a fixed policy library. Payoff matrices are precomputed, and support size is not a measured end-to-end runtime saving.
-
-This repository contains the experiments reported in the paper and its catalogue-coverage appendix. Separate exploratory experiments and earlier manuscript drafts are not part of this artifact.
+For core checks without saved results, run `python verify_results.py --unit-only`. The default `python reproduce.py` also validates saved summaries, bounds, mixture weights, sample sizes, and policy-library consistency. These checks complement a full simulation rerun; they do not replace it.

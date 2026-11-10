@@ -170,7 +170,7 @@ def check_archives():
                     f'{prefix}: prior support accounting')
             require(0 < certificate['positive_defender_size'] <= 36, f'{prefix}: defender support accounting')
         for section in ('exp2', 'exp7'):
-            methods = ('M1', 'M2', 'M3', 'M4', 'M5') if section == 'exp2' else ('M1', 'M2', 'M4', 'M5')
+            methods = ('M1', 'M2', 'M3', 'M4', 'M5')
             for method in methods:
                 mean = record[section][f'{method}_R_unsafe_cat']
                 worst = record[section][f'{method}_R_unsafe_cat_worst']
@@ -209,7 +209,7 @@ def check_archives():
     compare_tree(recomputed, summary, 'main summary')
     # Explicit independent mean/SD calculations also check the aggregation convention.
     for section, methods in [('exp2', ('M1', 'M2', 'M3', 'M4', 'M5')),
-                             ('exp7', ('M1', 'M2', 'M4', 'M5'))]:
+                             ('exp7', ('M1', 'M2', 'M3', 'M4', 'M5'))]:
         for method in methods:
             for metric in ('R_max', 'R_mean', 'R_unsafe_cat', 'R_unsafe_cat_worst', 'C_clean'):
                 values = np.array([row[section][f'{method}_{metric}'] for row in main])

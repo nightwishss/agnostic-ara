@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Agnostic ARA: decision-level sensor-attack experiments.
 
-Runs Experiments 1--5A plus an independent held-out attack diagnostic.
-Uses separate calibration, training, and testing banks; both Exp1 rankings use
-identical test data, while all defense fitting and Exp3 selection use train only.
+Runs attack ranking, defense comparison, attack selection, hide/fake comparison,
+and an independent held-out attack diagnostic.
+Uses separate calibration, training, and testing banks; both descriptive rankings
+use identical test data, while defense fitting and attack selection use train only.
 Policies are evaluated as the mixed saddle-point strategies returned by the LP.
-The finite catalogue is fully precomputed; sparsity is not a query-cost claim.
+The finite catalog is fully precomputed; sparsity is not a query-cost claim.
 """
 import numpy as np
 from numpy import exp, log
@@ -189,7 +190,7 @@ def build_extra_ordinary(rng, n_extra):
 
 
 def build_twin_catalogue(rng, policies, z_calib, theta_calib, zt, pt, target_gap=22.0):
-    """Twin catalogue calibrated on the TRAINING bank, as in original v7.
+    """Hide/fake catalog calibrated on the training sample bank.
     Main five-attack calibration remains on its independent calibration bank.
     """
     zc_imm = z_calib[theta_calib == 2]
@@ -615,7 +616,7 @@ def run_single_seed(seed):
     exp2['M5_support_cat_recall'] = len(set(m5_sup) & set(cat_indices)) / max(len(cat_indices), 1)
     results['exp2'] = exp2
     
-    # --- Exp 3: Rarity sweep (FIXED: vary TRAINING catalogue, evaluate on FULL 5-cat set) ---
+    # --- Exp 3: Rarity sweep (vary TRAINING catalogue, evaluate on FULL 5-cat set) ---
     # Sort catastrophic attacks by gap against clean policy → severity ordering (nested)
     cat_gaps_sorted = sorted([(j, G_train[0, j]) for j in cat_indices], key=lambda x: -x[1])
     cat_ordered = [j for j, _ in cat_gaps_sorted]
@@ -697,7 +698,7 @@ def run_single_seed(seed):
         }
     results['exp3'] = exp3
     
-    # --- Exp 4: Support efficiency (FIXED: V(E_K) lower bound + W_K upper bound) ---
+    # --- Exp 4: Support efficiency (V(E_K) lower bound + W_K upper bound) ---
     exp4 = {'full_minimax_train': full_minimax_train_val}
     
     # Helper: for a support E, compute V(E) (mixed minimax value, lower bound) and W (mixed worst on full catalogue, upper bound)
@@ -739,10 +740,6 @@ def run_single_seed(seed):
     
     results['exp4'] = exp4
     
-    # --- Exp 5: 500-attack (moved to appendix) ---
-    # --- Exp 6: 5-state (moved to appendix) ---
-    # These are skipped in the multi-seed main run; run separately if needed.
-    
     # --- Exp 7: Twin-threat ---
     twin_attacks = build_twin_catalogue(ar, policies, zc, tc, zt, pt)
     twin_pairs = [(a['name'], a['delta']) for a in twin_attacks]
@@ -765,6 +762,9 @@ def run_single_seed(seed):
 
     tm1 = method_clean(policies, zt, pt)
     tm2 = method_uniform(Gt_train)
+    twin_pred_losses = compute_prediction_loss(twin_attacks, zt, pt)
+    tm3_rho, tm3_top = method_prediction_topk(
+        policies, twin_attacks, twin_pairs, zt, pt, Gt_train, twin_pred_losses, K=5)
     tm4_rho, tm4_val = method_full_minimax(Gt_train)
     tm5_rho, tm5_sup, tm5_pi, tm5_hist = method_agnostic_support(Gt_train, policies)
 
@@ -790,7 +790,7 @@ def run_single_seed(seed):
         for k in ['R_max', 'R_mean', 'R_unsafe_cat', 'R_unsafe_cat_worst', 'C_clean']:
             exp7[f'{lb}_{k}'] = ev[k]
         exp7[f'{lb}_policy'] = ev['policy']
-    for lb, rho in [('M4', tm4_rho), ('M5', tm5_rho)]:
+    for lb, rho in [('M3', tm3_rho), ('M4', tm4_rho), ('M5', tm5_rho)]:
         ev = evaluate_mixed(rho, policies, Gt_test, twin_attacks, twin_cat, ze, pe, te)
         for k in ['R_max', 'R_mean', 'R_unsafe_cat', 'R_unsafe_cat_worst', 'C_clean']:
             exp7[f'{lb}_{k}'] = ev[k]
@@ -802,6 +802,7 @@ def run_single_seed(seed):
         exp7[f'{lb}_H_max'] = float(gv[h_ix].max()) if h_ix else 0.0
         exp7[f'{lb}_F_max'] = float(gv[f_ix].max()) if f_ix else 0.0
 
+    exp7['M3_selected_attacks'] = [twin_attacks[j]['name'] for j in tm3_top]
     exp7['M5_support_size'] = len(tm5_sup)
     h_in = sum(1 for j in tm5_sup if twin_attacks[j].get('family') == 'H')
     f_in = sum(1 for j in tm5_sup if twin_attacks[j].get('family') == 'F')
@@ -845,16 +846,22 @@ def run_single_seed(seed):
 # Multi-seed aggregator
 # ============================================================================
 def run_multi_seed(n_seeds=20, base_seed=20260721):
+    from concurrent.futures import ProcessPoolExecutor
+    import multiprocessing
+
     all_results = []
-    for s in range(n_seeds):
-        seed = base_seed + s * 100
-        t0 = time.time()
-        res = run_single_seed(seed)
-        dt = time.time() - t0
-        print(f"  seed={seed:3d}  t={dt:.1f}s  M5_sup={res['exp2']['M5_support_size']}  "
-              f"M5_CatUnsafe={res['exp2']['M5_R_unsafe_cat']:.3f}  "
-              f"M3_CatUnsafe={res['exp2']['M3_R_unsafe_cat']:.3f}", flush=True)
-        all_results.append(res)
+    # Isolate each run so native solver state and allocations do not accumulate.
+    with ProcessPoolExecutor(max_workers=1, max_tasks_per_child=1,
+                             mp_context=multiprocessing.get_context('spawn')) as pool:
+        for s in range(n_seeds):
+            seed = base_seed + s * 100
+            t0 = time.time()
+            res = pool.submit(run_single_seed, seed).result()
+            dt = time.time() - t0
+            print(f"  seed={seed:3d}  t={dt:.1f}s  M5_sup={res['exp2']['M5_support_size']}  "
+                  f"M5_CatUnsafe={res['exp2']['M5_R_unsafe_cat']:.3f}  "
+                  f"M3_CatUnsafe={res['exp2']['M3_R_unsafe_cat']:.3f}", flush=True)
+            all_results.append(res)
     return all_results
 
 
@@ -899,7 +906,7 @@ def aggregate(all_results):
     m, s = stats_across_seeds('exp1.worst_cat_rank_pred')
     agg['exp1_worst_cat_rank_pred_mean'] = m
     
-    # Exp 3: rarity sweep (FIXED: all policies evaluated on full 5-cat set)
+    # Exp 3: rarity sweep (all policies evaluated on full 5-cat set)
     for n_cat in [1, 2, 5]:
         for k in ['unif_mean_unsafe', 'unif_worst_unsafe', 'unif_mean_gap', 'unif_worst_gap',
                    'agn_mean_unsafe', 'agn_worst_unsafe', 'agn_mean_gap', 'agn_worst_gap', 'agn_sup_size']:
@@ -932,14 +939,14 @@ def aggregate(all_results):
     agg['exp4_gp_final_Delta_std'] = np.std(gp_final_Deltas, ddof=1) if len(gp_final_Deltas)>1 else 0
     
     # Exp 7
-    for method in ['M1', 'M2', 'M4', 'M5']:
+    for method in ['M1', 'M2', 'M3', 'M4', 'M5']:
         for metric in ['R_max', 'R_mean', 'R_unsafe_cat', 'R_unsafe_cat_worst', 'C_clean']:
             m, s = stats_across_seeds(f'exp7.{method}_{metric}')
             agg[f'exp7_{method}_{metric}_mean'] = m
             agg[f'exp7_{method}_{metric}_std'] = s
 
     # Exp 7: family-specific safety metrics
-    for method in ['M4', 'M5']:
+    for method in ['M3', 'M4', 'M5']:
         for metric in ['S_H', 'S_F', 'H_max', 'F_max']:
             m, s = stats_across_seeds(f'exp7.{method}_{metric}')
             agg[f'exp7_{method}_{metric}_mean'] = m
@@ -1011,9 +1018,9 @@ def main():
                 sample_sizes=dict(train=5000, test=20000, calibration=2000),
                 statistics='Mean and sample standard deviation (ddof=1) over seeds; paired inference uses the seed as the unit.',
                 main_calibration='Target P(go or slow | imminent), independent calibration bank.',
-                twin_calibration='Original v7 protocol: target clean Bayes utility gap 22 on training bank; independent test evaluation.',
+                twin_calibration='Target clean Bayes utility gap 22 on training bank; independent test evaluation.',
                 exp1_ranking_bank='test for both gap and TV; M3 and Exp4 TV rankings use train only',
-                exp1_worst_target='Highest ground-truth conditional unsafe-action rate among labeled catastrophic attacks; ties use catalogue order',
+                exp1_worst_target='Highest ground-truth conditional unsafe-action rate among labeled catastrophic attacks; ties use catalog order',
                 exp3_selection_bank='train',
                 heldout_attack_diagnostic=dict(n_attacks=100, direction='isotropic Gaussian normalized to unit L2', amplitude='uniform [0.05,2.5]', coordinate_budget=1.5, minimum_L2_distance_from_training_attack=0.10, random_seed_offset=12345),
                 grids=dict(c=[1,2,4], r=[1,2], f=[1,2,4], d=[1,2]),

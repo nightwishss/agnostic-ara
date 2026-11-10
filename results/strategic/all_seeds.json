@@ -28372,7 +28372,7 @@
     }
   ],
   "metadata": {
-    "runtime_seconds": 73.61122666718438,
+    "runtime_seconds": 119.91667691711336,
     "sample_sizes": {
       "train": 5000,
       "test": 20000,
@@ -28380,8 +28380,8 @@
     },
     "seed_count": 20,
     "statistic": "Mean and sample SD (ddof=1)",
-    "catalogue": "Original v7 5B twin catalogue; same six severe attacks as 5A, independent ordinary-attack RNG stream",
-    "calibration_bank": "Original v7 twin calibration on training bank; independent evaluation bank",
+    "catalogue": "Hide/fake catalog; same six severe attacks as the non-recursive comparison, independent background-attack RNG stream",
+    "calibration_bank": "Hide/fake calibration on training bank; independent evaluation bank",
     "response_generation_bank": "train",
     "stopping": "fresh final training BR set is a subset of discovered E",
     "Rstrat": "Held-out test gap, maximized over final frozen training-BR set A(rho)",
